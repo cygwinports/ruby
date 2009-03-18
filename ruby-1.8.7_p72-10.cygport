@@ -1,8 +1,8 @@
 DESCRIPTION="Interpreted object-oriented scripting language"
 HOMEPAGE="http://www.ruby-lang.org/"
 SRC_URI="ftp://ftp.ruby-lang.org/pub/${PN}/${PV_MAJ_MIN}/${P/_/-}.tar.gz"
-#PATCH_URI="mirror://portage/dev-lang/${PN}/files/${PN}-1.8.6-memory-leak.diff"
-PATCH_URI="1.8.7-dlfree.patch"
+PATCH_URI="1.8.7-dlfree.patch
+           1.8.7-cygwin17.patch"
 
 SRC_DIR="${P/_/-}"
 
@@ -13,7 +13,7 @@ src_compile() {
 	CFLAGS+=" -fno-strict-aliasing"
 	cygconf \
 		--enable-shared \
-		--disable-ipv6 \
+		--enable-ipv6 \
 		--disable-socks \
 		--with-dbm \
 		--with-gdbm \

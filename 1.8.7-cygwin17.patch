@@ -1,0 +1,37 @@
+_longjmp now returns void, but they don't need to be prototyped here.
+
+--- origsrc/ruby-1.8.7-p72/eval.c	2008-08-03 22:24:26.000000000 -0500
++++ src/ruby-1.8.7-p72/eval.c	2009-03-17 22:31:22.248727500 -0500
+@@ -196,9 +196,6 @@ static int volatile freebsd_clear_carry_
+ #  define ruby_setjmp(just_before_setjmp, env) \
+      ((just_before_setjmp), RUBY_SETJMP(env))
+ #  define ruby_longjmp(env,val) RUBY_LONGJMP(env,val)
+-#  ifdef __CYGWIN__
+-int _setjmp(), _longjmp();
+-#  endif
+ #endif
+ 
+ #include <sys/types.h>
+--- origsrc/ruby-1.8.7-p72/file.c	2008-07-10 04:47:31.000000000 -0500
++++ src/ruby-1.8.7-p72/file.c	2009-03-17 22:51:40.295602500 -0500
+@@ -2758,7 +2758,7 @@ file_expand_path(fname, dname, result)
+ 	    is_symlink = 1;
+ 	    *p = '\0';
+ 	}
+-	if (cygwin_conv_to_win32_path((*buf ? buf : "/"), w32buf) == 0) {
++	if (cygwin_conv_path(CCP_POSIX_TO_WIN_A, (*buf ? buf : "/"), w32buf, MAXPATHLEN) == 0) {
+ 	    b = w32buf;
+ 	}
+ 	if (is_symlink && b == w32buf) {
+--- origsrc/ruby-1.8.7-p72/gc.c	2008-08-03 22:24:26.000000000 -0500
++++ src/ruby-1.8.7-p72/gc.c	2009-03-17 22:52:17.420602500 -0500
+@@ -39,9 +39,6 @@ void rb_io_fptr_finalize _((struct rb_io
+ 
+ #define rb_setjmp(env) RUBY_SETJMP(env)
+ #define rb_jmp_buf rb_jmpbuf_t
+-#ifdef __CYGWIN__
+-int _setjmp(), _longjmp();
+-#endif
+ 
+ /* Make alloca work the best possible way.  */
+ #ifdef __GNUC__
