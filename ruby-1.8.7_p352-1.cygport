@@ -1,25 +1,21 @@
 DESCRIPTION="Interpreted object-oriented scripting language"
 HOMEPAGE="http://www.ruby-lang.org/"
 SRC_URI="ftp://ftp.ruby-lang.org/pub/${PN}/${PV_MAJ_MIN}/${P/_/-}.tar.gz"
-PATCH_URI="1.8.7-dlfree.patch
-           1.8.7-cygwin17.patch"
-
 SRC_DIR="${P/_/-}"
+
+PATCH_URI="
+	1.8.7-cygwin17.patch
+	1.8.7-cygwin-tcltk.patch
+	1.8.7-cygwin-uuid.patch
+	1.8.7-dlfree.patch
+"
 
 DIFF_EXCLUDES=".document"
 
 src_compile() {
 	cd ${B}
 	CFLAGS+=" -fno-strict-aliasing"
-	cygconf \
-		--enable-shared \
-		--enable-ipv6 \
-		--disable-socks \
-		--with-dbm \
-		--with-gdbm \
-		--with-openssl \
-		--with-tk
-
+	cygconf --enable-shared
 	cygmake
 	cygmake -j1 rdoc
 }
@@ -37,6 +33,6 @@ src_install() {
 	cp -r .ext/rdoc/* ${D}/usr/share/ri/${PV_MAJ_MIN}/system/
 
 	keepdir /usr/lib/ruby/site_ruby/${PV_MAJ_MIN}/i386-cygwin \
-	        /usr/lib/ruby/vendor_ruby/${PV_MAJ_MIN}/i386-cygwin \
-			/usr/share/ri/${PV_MAJ_MIN}/site
+		/usr/lib/ruby/vendor_ruby/${PV_MAJ_MIN}/i386-cygwin \
+		/usr/share/ri/${PV_MAJ_MIN}/site
 }

@@ -1,0 +1,19 @@
+--- origsrc/ruby-1.8.7-p352/ext/tk/extconf.rb	2011-06-29 22:53:30.000000000 -0500
++++ src/ruby-1.8.7-p352/ext/tk/extconf.rb	2011-10-26 19:07:48.530860500 -0500
+@@ -106,7 +106,7 @@ end
+ # fuctions
+ ##############################################################
+ def is_win32?
+-  /mswin|mingw|cygwin|bccwin/ =~ RUBY_PLATFORM
++  /mswin|mingw|bccwin/ =~ RUBY_PLATFORM
+ end
+ 
+ def is_macosx?
+@@ -1762,7 +1762,6 @@ unless is_win32?
+   print("\n") # progress
+ end
+ $CPPFLAGS ||= ""
+-$CPPFLAGS += ' -D_WIN32' if /cygwin/ =~ RUBY_PLATFORM
+ 
+ # Does ruby have nativethread ?
+ TkLib_Config["ruby_with_thread"] =
