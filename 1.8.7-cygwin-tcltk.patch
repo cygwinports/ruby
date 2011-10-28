@@ -9,6 +9,24 @@
  end
  
  def is_macosx?
+@@ -602,7 +602,7 @@ def libcheck_for_tclConfig(tcldir, tkdir
+         #puts "check #{file} #{$1} #{tclfunc} #{tcldir}"
+         #find_library($1, tclfunc, tcldir)
+         if (tclconf && tclconf["TCL_SHARED_BUILD"] == "0") ||
+-            (ext != CONFIG['DLEXT'] && ext == CONFIG['LIBEXT']) || ext == "a"
++            (!tclconf && ((ext != CONFIG['DLEXT'] && ext == CONFIG['LIBEXT']) || ext == "a"))
+           # static link
+           tcllibs = $libs + " -DSTATIC_BUILD " + file.quote
+ 
+@@ -645,7 +645,7 @@ def libcheck_for_tclConfig(tcldir, tkdir
+         #puts "check #{file} #{$1} #{tkfunc} #{tkdir}"
+         # find_library($1, tkfunc, tkdir)
+         if (tkconf && tkconf["TCL_SHARED_BUILD"] == "0") ||
+-            (ext != CONFIG['DLEXT'] && ext == CONFIG['LIBEXT']) || ext == "a"
++            (!tkconf && ((ext != CONFIG['DLEXT'] && ext == CONFIG['LIBEXT']) || ext == "a"))
+           # static link
+           tklibs = " -DSTATIC_BUILD " + file.quote
+ 
 @@ -1762,7 +1762,6 @@ unless is_win32?
    print("\n") # progress
  end

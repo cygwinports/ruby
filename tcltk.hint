@@ -1,6 +1,7 @@
 category: Interpreters Ruby
-requires: crypt libdb4.5 libgcc1 libgdbm4 libiconv2 libncurses10 libreadline7 libopenssl098 zlib0
-sdesc: "Interpreted object-oriented scripting language"
+requires: ruby tcl tcl-tk
+external-source: ruby
+sdesc: "Ruby Tcl/Tk interface"
 ldesc: "Ruby is the interpreted scripting language for quick and
 easy object-oriented programming.  It has many features to
 process text files and to do system management tasks (as in
