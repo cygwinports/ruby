@@ -1,5 +1,5 @@
 category: Interpreters Ruby
-requires: crypt libdb4.5 libgcc1 libgdbm4 libiconv2 libncurses10 libreadline7 libopenssl098 zlib0
+requires: crypt libdb4.8 libgcc1 libgdbm4 libiconv2 libncurses10 libreadline7 libopenssl098 zlib0
 sdesc: "Interpreted object-oriented scripting language"
 ldesc: "Ruby is the interpreted scripting language for quick and
 easy object-oriented programming.  It has many features to
