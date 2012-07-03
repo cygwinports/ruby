@@ -22,7 +22,7 @@ DIFF_EXCLUDES=".document"
 src_compile() {
 	cd ${B}
 	CFLAGS+=" -fno-strict-aliasing"
-	cygconf --enable-shared
+	cygconf --enable-shared LDSHARED="${CC} -shared"
 	cygmake
 	cygmake -j1 rdoc
 }
@@ -35,6 +35,8 @@ src_test() {
 src_install() {
 	cd ${B}
 	cygmake install-all DESTDIR=${D}
+
+	sed -i -e 's/ -fdebug-prefix-map\([^ ]*\)//g' ${D}/${rbarchdir}/rbconfig.rb
 
 	keepdir /usr/lib/ruby/site_ruby/${PV_MAJ_MIN}/i386-cygwin \
 		/usr/lib/ruby/vendor_ruby/${PV_MAJ_MIN}/i386-cygwin \
