@@ -35,3 +35,25 @@
  
  # Does ruby have nativethread ?
  TkLib_Config["ruby_with_thread"] =
+--- origsrc/ruby-1.9.3-p194/ext/tk/stubs.c	2011-05-15 06:55:52.000000000 -0500
++++ src/ruby-1.9.3-p194/ext/tk/stubs.c	2012-08-19 13:54:34.862671000 -0500
+@@ -71,7 +71,7 @@ _nativethread_consistency_check(ip)
+ 
+ #if defined USE_TCL_STUBS && defined USE_TK_STUBS
+ 
+-#if defined _WIN32 || defined __CYGWIN__
++#if defined _WIN32
+ #  ifdef HAVE_RUBY_RUBY_H
+ #    include "ruby/util.h"
+ #  else
+@@ -100,6 +100,10 @@ _nativethread_consistency_check(ip)
+ #  undef DLEXT
+ #  define DLEXT ".dylib"
+ # endif
++# if defined(__CYGWIN__)
++#  undef DLEXT
++#  define DLEXT ".dll"
++# endif
+ #endif
+ 
+ static DL_HANDLE tcl_dll = (DL_HANDLE)0;

@@ -1,0 +1,42 @@
+rblibdir=usr/lib/ruby/1.9.1
+rbarchdir=${rblibdir}/i386-cygwin
+
+CATEGORY="Interpreters Ruby"
+SUMMARY="Interpreted object-oriented scripting language"
+DESCRIPTION="Ruby is the interpreted scripting language for quick and easy
+object-oriented programming.  It has many features to process text files and
+to do system management tasks (as in Perl).  It is simple, straight-forward,
+and extensible."
+HOMEPAGE="http://www.ruby-lang.org/"
+SRC_URI="ftp://ftp.ruby-lang.org/pub/${PN}/${PV_MAJ_MIN}/${P}.tar.bz2"
+
+PATCH_URI="
+	1.8.7-cygwin-tcltk.patch
+	1.8.7-cygwin-uuid.patch
+"
+
+PKG_NAMES="${PN} ${PN}-doc ${PN}-tcltk"
+ruby_CONTENTS="--exclude=html --exclude=tcltk* --exclude=*tk* --exclude=usr/share/ri usr/"
+ruby_doc_CONTENTS="usr/share/doc/ruby/html/ usr/share/ri/"
+ruby_tcltk_SUMMARY="Ruby Tcl/Tk interface"
+ruby_tcltk_CONTENTS="$rblibdir/*tk* $rbarchdir/*tk*"
+
+DIFF_EXCLUDES=".document"
+
+src_compile() {
+	cd ${B}
+	CFLAGS+=" -fno-strict-aliasing"
+	cygconf --enable-shared LDSHARED="${CC} -shared"
+	cygmake
+}
+
+src_test() {
+	cd ${B}
+	make test
+}
+
+src_install() {
+	cd ${B}
+	cygmake install-all DESTDIR=${D}
+	sed -i -e "s/ -fdebug-prefix-map\([^ ']*\)//g" ${D}/${rbarchdir}/rbconfig.rb
+}
