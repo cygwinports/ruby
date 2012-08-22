@@ -26,7 +26,7 @@ DIFF_EXCLUDES=".document"
 src_compile() {
 	cd ${B}
 	CFLAGS+=" -fno-strict-aliasing"
-	cygconf --enable-shared LDSHARED="${CC} -shared"
+	cygconf --enable-shared LDSHARED="${CC} -shared" DLDFLAGS="--Wl,--export-all"
 	cygmake
 }
 
@@ -38,5 +38,5 @@ src_test() {
 src_install() {
 	cd ${B}
 	cygmake install-all DESTDIR=${D}
-	sed -i -e "s/ -fdebug-prefix-map\([^ ']*\)//g" ${D}/${rbarchdir}/rbconfig.rb
+	sed -i -e "s/ -fdebug-prefix-map\([^ '\"]*\)//g" ${D}/${rbarchdir}/rbconfig.rb
 }
