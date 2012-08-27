@@ -1,5 +1,6 @@
 rblibdir=usr/lib/ruby/1.9.1
 rbarchdir=${rblibdir}/i386-cygwin
+rbgemdir=usr/lib/ruby/gems/1.9.1
 
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
@@ -26,7 +27,8 @@ DIFF_EXCLUDES=".document"
 src_compile() {
 	cd ${B}
 	CFLAGS+=" -fno-strict-aliasing"
-	cygconf --enable-shared LDSHARED="${CC} -shared" DLDFLAGS="--Wl,--export-all"
+	CXXFLAGS+=" -fno-strict-aliasing"
+	cygconf --enable-shared LDSHARED="${CC} -shared" DLDFLAGS="-Wl,--export-all-symbols"
 	cygmake
 }
 
@@ -38,5 +40,13 @@ src_test() {
 src_install() {
 	cd ${B}
 	cygmake install-all DESTDIR=${D}
-	sed -i -e "s/ -fdebug-prefix-map\([^ '\"]*\)//g" ${D}/${rbarchdir}/rbconfig.rb
+	# leave trailing space in case of improper append (e.g. globalhotkeys)
+	sed -i -e "s/ -fdebug-prefix-map\([^ '\"]*\)/ /g" ${D}/${rbarchdir}/rbconfig.rb
+
+	# updated versions provided by gems
+	rm -f ${D}/usr/bin/{rake,rdoc,ri}
+	rm -fr ${D}/${rbarchdir}/json/
+	rm -fr ${D}/${rblibdir}/{json,minitest,rake,rdoc}*
+	rm -fr ${D}/${rbgemdir}/*/{json,minitest,rake,rdoc}-*
+	rm -f ${D}/usr/share/man/man1/{rake,ri}.*
 }
