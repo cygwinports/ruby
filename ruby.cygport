@@ -1,7 +1,6 @@
-rblibdir=usr/lib/ruby/1.9.1
-rbarchdir=${rblibdir}/i386-cygwin
-rbgemdir=usr/lib/ruby/gems/1.9.1
-
+NAME="ruby"
+VERSION=1.9.3-p194
+RELEASE=3
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
 DESCRIPTION="Ruby is the interpreted scripting language for quick and easy
@@ -38,6 +37,10 @@ src_test() {
 }
 
 src_install() {
+	local rblibdir=usr/lib/ruby/1.9.1
+	local rbarchdir=${rblibdir}/i386-cygwin
+	local rbgemdir=usr/lib/ruby/gems/1.9.1
+
 	cd ${B}
 	cygmake install-all DESTDIR=${D}
 	# leave trailing space in case of improper append (e.g. globalhotkeys)
