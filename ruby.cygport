@@ -1,6 +1,6 @@
 NAME="ruby"
 VERSION=1.9.3-p194
-RELEASE=3
+RELEASE=4
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
 DESCRIPTION="Ruby is the interpreted scripting language for quick and easy
@@ -11,6 +11,8 @@ HOMEPAGE="http://www.ruby-lang.org/"
 SRC_URI="ftp://ftp.ruby-lang.org/pub/${PN}/${PV_MAJ_MIN}/${P}.tar.bz2"
 
 PATCH_URI="
+	http://pkgs.fedoraproject.org/cgit/ruby.git/plain/ruby-1.9.3-mkmf-verbose.patch
+	http://pkgs.fedoraproject.org/cgit/ruby.git/plain/ruby-1.9.3-backport-from-trunk-rev37068.patch
 	1.8.7-cygwin-tcltk.patch
 	1.8.7-cygwin-uuid.patch
 "
@@ -19,8 +21,9 @@ PKG_NAMES="${PN} ${PN}-doc ${PN}-tcltk"
 ruby_CONTENTS="--exclude=html --exclude=tcltk* --exclude=*tk* --exclude=usr/share/ri usr/"
 ruby_doc_CONTENTS="usr/share/doc/ruby/html/ usr/share/ri/"
 ruby_tcltk_SUMMARY="Ruby Tcl/Tk interface"
-ruby_tcltk_CONTENTS="$rblibdir/*tk* $rbarchdir/*tk*"
+ruby_tcltk_CONTENTS="usr/lib/ruby/1.9.1/*tk* usr/lib/ruby/1.9.1/i386-cygwin/*tk*"
 
+DEPS_PATH="/usr/lib/ruby/gems/1.9.1/gems/bigdecimal-*"
 DIFF_EXCLUDES=".document"
 
 src_compile() {
@@ -48,8 +51,8 @@ src_install() {
 
 	# updated versions provided by gems
 	rm -f ${D}/usr/bin/{rake,rdoc,ri}
-	rm -fr ${D}/${rbarchdir}/json/
-	rm -fr ${D}/${rblibdir}/{json,minitest,rake,rdoc}*
-	rm -fr ${D}/${rbgemdir}/*/{json,minitest,rake,rdoc}-*
+	rm -fr ${D}/${rbarchdir}/{bigdecimal,io/console,json/}*
+	rm -fr ${D}/${rblibdir}/{bigdecimal,io/console,json,minitest,rake,rdoc}*
+	rm -fr ${D}/${rbgemdir}/
 	rm -f ${D}/usr/share/man/man1/{rake,ri}.*
 }
