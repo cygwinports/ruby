@@ -1,6 +1,6 @@
 NAME="ruby"
-VERSION=1.9.3-p194
-RELEASE=4
+VERSION=1.9.3-p286
+RELEASE=1
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
 DESCRIPTION="Ruby is the interpreted scripting language for quick and easy
@@ -12,7 +12,6 @@ SRC_URI="ftp://ftp.ruby-lang.org/pub/${PN}/${PV_MAJ_MIN}/${P}.tar.bz2"
 
 PATCH_URI="
 	http://pkgs.fedoraproject.org/cgit/ruby.git/plain/ruby-1.9.3-mkmf-verbose.patch
-	http://pkgs.fedoraproject.org/cgit/ruby.git/plain/ruby-1.9.3-backport-from-trunk-rev37068.patch
 	1.8.7-cygwin-tcltk.patch
 	1.8.7-cygwin-uuid.patch
 "
