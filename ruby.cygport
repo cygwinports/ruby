@@ -1,6 +1,6 @@
 NAME="ruby"
 VERSION=1.9.3-p385
-RELEASE=1
+RELEASE=2
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
 DESCRIPTION="Ruby is the interpreted scripting language for quick and easy
@@ -14,6 +14,7 @@ PATCH_URI="
 	http://pkgs.fedoraproject.org/cgit/ruby.git/plain/ruby-1.9.3-mkmf-verbose.patch
 	1.8.7-cygwin-tcltk.patch
 	1.8.7-cygwin-uuid.patch
+	1.9.3-cygwin-rails.patch
 "
 
 PKG_NAMES="${PN} ${PN}-doc ${PN}-tcltk ruby-bigdecimal ruby-io-console"
@@ -29,6 +30,8 @@ ruby_io_console_SUMMARY="Obsolete package"
 DIFF_EXCLUDES=".document"
 
 src_compile() {
+	cd ${S}
+	cygautoreconf
 	cd ${B}
 	CFLAGS+=" -fno-strict-aliasing"
 	CXXFLAGS+=" -fno-strict-aliasing"
@@ -55,6 +58,7 @@ src_install() {
 	rm -f ${D}/usr/bin/{rake,rdoc,ri}
 	rm -fr ${D}/${rbarchdir}/{json/}*
 	rm -fr ${D}/${rblibdir}/{json,minitest,rake,rdoc}*
-	rm -fr ${D}/${rbgemdir}/
+	rm -fr ${D}/${rbgemdir}/gems/{json,minitest,rake,rdoc}*
+	rm -f ${D}/${rbgemdir}/specifications/{json,minitest,rake,rdoc}*
 	rm -f ${D}/usr/share/man/man1/{rake,ri}.*
 }
