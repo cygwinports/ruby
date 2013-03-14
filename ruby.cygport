@@ -1,6 +1,6 @@
 NAME="ruby"
-VERSION=1.9.3-p385
-RELEASE=2
+VERSION=1.9.3-p392
+RELEASE=1
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
 DESCRIPTION="Ruby is the interpreted scripting language for quick and easy
@@ -17,15 +17,11 @@ PATCH_URI="
 	1.9.3-cygwin-rails.patch
 "
 
-PKG_NAMES="${PN} ${PN}-doc ${PN}-tcltk ruby-bigdecimal ruby-io-console"
+PKG_NAMES="${PN} ${PN}-doc ${PN}-tcltk"
 ruby_CONTENTS="--exclude=html --exclude=tcltk* --exclude=*tk* --exclude=usr/share/ri usr/"
 ruby_doc_CONTENTS="usr/share/doc/ruby/html/ usr/share/ri/"
 ruby_tcltk_SUMMARY="Ruby Tcl/Tk interface"
 ruby_tcltk_CONTENTS="usr/lib/ruby/1.9.1/*tk* usr/lib/ruby/1.9.1/i386-cygwin/*tk*"
-ruby_bigdecimal_CATEGORY="_obsolete"
-ruby_bigdecimal_SUMMARY="Obsolete package"
-ruby_io_console_CATEGORY="_obsolete"
-ruby_io_console_SUMMARY="Obsolete package"
 
 DIFF_EXCLUDES=".document"
 
