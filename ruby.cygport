@@ -1,6 +1,6 @@
 NAME="ruby"
 VERSION=1.9.3-p392
-RELEASE=1
+RELEASE=2
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
 DESCRIPTION="Ruby is the interpreted scripting language for quick and easy
@@ -54,8 +54,8 @@ src_install() {
 	# updated versions provided by gems
 	rm -f ${D}/usr/bin/{rake,rdoc,ri}
 	rm -fr ${D}/${rbarchdir}/{json/}*
-	rm -fr ${D}/${rblibdir}/{json,minitest,rake,rdoc}*
-	rm -fr ${D}/${rbgemdir}/gems/{json,minitest,rake,rdoc}*
-	rm -f ${D}/${rbgemdir}/specifications/{json,minitest,rake,rdoc}*
+	rm -fr ${D}/${rblibdir}/{json,rake,rdoc}*
+	rm -fr ${D}/${rbgemdir}/gems/{json,rake,rdoc}*
+	rm -f ${D}/${rbgemdir}/specifications/{json,rake,rdoc}*
 	rm -f ${D}/usr/share/man/man1/{rake,ri}.*
 }
