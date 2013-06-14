@@ -1,6 +1,6 @@
 NAME="ruby"
-VERSION=1.9.3-p392
-RELEASE=2
+VERSION=1.9.3-p429
+RELEASE=1
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
 DESCRIPTION="Ruby is the interpreted scripting language for quick and easy
@@ -8,7 +8,7 @@ object-oriented programming.  It has many features to process text files and
 to do system management tasks (as in Perl).  It is simple, straight-forward,
 and extensible."
 HOMEPAGE="http://www.ruby-lang.org/"
-SRC_URI="ftp://ftp.ruby-lang.org/pub/${PN}/${PV_MAJ_MIN}/${P}.tar.bz2"
+SRC_URI="ftp://ftp.ruby-lang.org/pub/ruby/${VERSION%.*}/ruby-${VERSION}.tar.bz2"
 
 PATCH_URI="
 	http://pkgs.fedoraproject.org/cgit/ruby.git/plain/ruby-1.9.3-mkmf-verbose.patch
@@ -18,7 +18,7 @@ PATCH_URI="
 	1.9.3-cygwin64.patch
 "
 
-PKG_NAMES="${PN} ${PN}-doc ${PN}-tcltk"
+PKG_NAMES="${NAME} ${NAME}-doc ${NAME}-tcltk"
 ruby_CONTENTS="--exclude=html --exclude=tcltk* --exclude=*tk* --exclude=usr/share/ri usr/"
 ruby_doc_CONTENTS="usr/share/doc/ruby/html/ usr/share/ri/"
 ruby_tcltk_SUMMARY="Ruby Tcl/Tk interface"
