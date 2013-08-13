@@ -30,8 +30,9 @@ src_compile() {
 	cd ${S}
 	cygautoreconf
 	cd ${B}
-	CFLAGS+=" -fno-strict-aliasing"
-	CXXFLAGS+=" -fno-strict-aliasing"
+	# keep the trailing spaces here
+	CFLAGS+=" -fno-strict-aliasing "
+	CXXFLAGS+=" -fno-strict-aliasing "
 	cygconf --enable-shared LDSHARED="${CC} -shared" DLDFLAGS="-Wl,--export-all-symbols"
 	cygmake
 }
