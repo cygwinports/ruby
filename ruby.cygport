@@ -19,6 +19,7 @@ PATCH_URI="
 "
 
 PKG_NAMES="${NAME} ${NAME}-doc ${NAME}-tcltk"
+ruby_REQUIRES="ca-certificates"
 ruby_CONTENTS="--exclude=html --exclude=tcltk* --exclude=*tk* --exclude=usr/share/ri usr/"
 ruby_doc_CONTENTS="usr/share/doc/ruby/html/ usr/share/ri/"
 ruby_tcltk_SUMMARY="Ruby Tcl/Tk interface"
@@ -59,4 +60,8 @@ src_install() {
 	rm -fr ${D}/${rbgemdir}/gems/{json,rake,rdoc}*
 	rm -f ${D}/${rbgemdir}/specifications/{json,rake,rdoc}*
 	rm -f ${D}/usr/share/man/man1/{rake,ri}.*
+
+	# use system ca-certificates
+	rm -f ${D}${rblibdir}/rubygems/ssl_certs/ca-bundle.pem
+	dosym /usr/ssl/certs/ca-bundle.crt ${rblibdir}/rubygems/ssl_certs/ca-bundle.pem
 }
