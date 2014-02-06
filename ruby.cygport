@@ -1,5 +1,5 @@
 NAME="ruby"
-VERSION=1.9.3-p448
+VERSION=1.9.3-p484
 RELEASE=1
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
@@ -25,7 +25,7 @@ ruby_doc_CONTENTS="usr/share/doc/ruby/html/ usr/share/ri/"
 ruby_tcltk_SUMMARY="Ruby Tcl/Tk interface"
 ruby_tcltk_CONTENTS="usr/lib/ruby/1.9.1/*tk* usr/lib/ruby/1.9.1/*-cygwin/*tk*"
 
-DIFF_EXCLUDES=".document"
+DIFF_EXCLUDES=".document revision.h"
 
 src_compile() {
 	cd ${S}
@@ -44,9 +44,9 @@ src_test() {
 }
 
 src_install() {
-	local rblibdir=usr/lib/ruby/1.9.1
+	local rblibdir=/usr/lib/ruby/1.9.1
 	local rbarchdir=${rblibdir}/${ARCH/i6/i3}-cygwin
-	local rbgemdir=usr/lib/ruby/gems/1.9.1
+	local rbgemdir=/usr/lib/ruby/gems/1.9.1
 
 	cd ${B}
 	cygmake install-all DESTDIR=${D}
