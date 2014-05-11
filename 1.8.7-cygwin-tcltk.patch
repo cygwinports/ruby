@@ -9,6 +9,14 @@
  end
  
  def is_macosx?
+@@ -553,6 +553,7 @@ def get_ext_list()
+   exts = [CONFIG['DLEXT']]
+   exts.concat %w(dll) if is_win32?
+   exts.concat %w(bundle dylib) if is_macosx? || /nextstep|openstep|rhapsody/ =~ RUBY_PLATFORM
++  exts.concat %w(dll.a) if /cygwin/ =~ RUBY_PLATFORM
+ 
+   if TkLib_Config["tcltk-stubs"] || TkLib_Config['enable-shared'] == false
+     exts.unshift "lib" if is_win32?
 @@ -602,7 +602,7 @@ def libcheck_for_tclConfig(tcldir, tkdir
          #puts "check #{file} #{$1} #{tclfunc} #{tcldir}"
          #find_library($1, tclfunc, tcldir)
