@@ -1,5 +1,5 @@
 NAME="ruby"
-VERSION=1.9.3-p545
+VERSION=2.0.0-p481
 RELEASE=1
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
@@ -11,19 +11,21 @@ HOMEPAGE="http://www.ruby-lang.org/"
 SRC_URI="ftp://ftp.ruby-lang.org/pub/ruby/${VERSION%.*}/ruby-${VERSION}.tar.bz2"
 
 PATCH_URI="
-	http://pkgs.fedoraproject.org/cgit/ruby.git/plain/ruby-1.9.3-mkmf-verbose.patch
+	fedora/ruby-2.0.0-Prevent-duplicated-paths-when-empty-version-string-i.patch
+	fedora/ruby-1.9.3-always-use-i386.patch
+	fedora/ruby-1.9.3.p195-fix-webrick-tests.patch
+	fedora/ruby-1.9.3-mkmf-verbose.patch
+	fedora/ruby-2.0.0-p247-Revert-mkmf.rb-prefix-install_dirs-only-with-DESTDIR.patch
 	1.8.7-cygwin-tcltk.patch
-	1.8.7-cygwin-uuid.patch
 	1.9.3-cygwin-rails.patch
-	1.9.3-cygwin64.patch
 "
 
 PKG_NAMES="${NAME} ${NAME}-doc ${NAME}-tcltk"
 ruby_REQUIRES="ca-certificates"
-ruby_CONTENTS="--exclude=html --exclude=tcltk* --exclude=*tk* --exclude=usr/share/ri usr/"
-ruby_doc_CONTENTS="usr/share/doc/ruby/html/ usr/share/ri/"
+ruby_CONTENTS="--exclude=capi --exclude=tcltk* --exclude=*tk* --exclude=usr/share/ri usr/"
+ruby_doc_CONTENTS="usr/share/doc/ruby/capi/ usr/share/ri/"
 ruby_tcltk_SUMMARY="Ruby Tcl/Tk interface"
-ruby_tcltk_CONTENTS="usr/lib/ruby/1.9.1/*tk* usr/lib/ruby/1.9.1/*-cygwin/*tk*"
+ruby_tcltk_CONTENTS="usr/lib/ruby/2.0.0/*tk* usr/lib/ruby/2.0.0/*-cygwin/*tk*"
 
 DIFF_EXCLUDES=".document revision.h"
 
@@ -31,9 +33,6 @@ src_compile() {
 	cd ${S}
 	cygautoreconf
 	cd ${B}
-	# keep the trailing spaces here
-	CFLAGS+=" -fno-strict-aliasing "
-	CXXFLAGS+=" -fno-strict-aliasing "
 	cygconf --enable-shared LDSHARED="${CC} -shared" DLDFLAGS="-Wl,--export-all-symbols"
 	cygmake
 }
@@ -44,9 +43,9 @@ src_test() {
 }
 
 src_install() {
-	local rblibdir=/usr/lib/ruby/1.9.1
+	local rblibdir=/usr/lib/ruby/2.0.0
 	local rbarchdir=${rblibdir}/${ARCH/i6/i3}-cygwin
-	local rbgemdir=/usr/lib/ruby/gems/1.9.1
+	local rbgemdir=/usr/lib/ruby/gems/2.0.0
 
 	cd ${B}
 	cygmake install-all DESTDIR=${D}
