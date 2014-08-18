@@ -17,7 +17,6 @@ PATCH_URI="
 	fedora/ruby-1.9.3-mkmf-verbose.patch
 	fedora/ruby-2.0.0-p247-Revert-mkmf.rb-prefix-install_dirs-only-with-DESTDIR.patch
 	1.8.7-cygwin-tcltk.patch
-	1.9.3-cygwin-rails.patch
 "
 
 PKG_NAMES="${NAME} ${NAME}-doc ${NAME}-tcltk"
