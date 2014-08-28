@@ -14,25 +14,47 @@ PATCH_URI="
 	fedora/ruby-2.0.0-Prevent-duplicated-paths-when-empty-version-string-i.patch
 	fedora/ruby-1.9.3-always-use-i386.patch
 	fedora/ruby-1.9.3.p195-fix-webrick-tests.patch
+	fedora/ruby-1.9.3-custom-rubygems-location.patch
 	fedora/ruby-1.9.3-mkmf-verbose.patch
 	fedora/ruby-2.0.0-p247-Revert-mkmf.rb-prefix-install_dirs-only-with-DESTDIR.patch
 	1.8.7-cygwin-tcltk.patch
+	2.0.0-cygwin-configure.patch
+	2.0.0-cygwin-rubygems.patch
+	2.0.0-pkgconfig-version.patch
 "
 
 PKG_NAMES="${NAME} ${NAME}-doc ${NAME}-tcltk"
-ruby_REQUIRES="ca-certificates"
 ruby_CONTENTS="--exclude=capi --exclude=tcltk* --exclude=*tk* --exclude=usr/share/ri usr/"
 ruby_doc_CONTENTS="usr/share/doc/ruby/capi/ usr/share/ri/"
 ruby_tcltk_SUMMARY="Ruby Tcl/Tk interface"
-ruby_tcltk_CONTENTS="usr/lib/ruby/2.0.0/*tk* usr/lib/ruby/2.0.0/*-cygwin/*tk*"
+ruby_tcltk_CONTENTS="usr/lib/ruby/${VERSION%.*}.0/*tk* usr/share/ruby/${VERSION%.*}.0/*tk*"
 
 DIFF_EXCLUDES=".document revision.h"
 
 src_compile() {
+	# drop the trailing .0 for 2.1?
+	local ruby_version=${VERSION%.*}.0
+
 	cd ${S}
 	cygautoreconf
 	cd ${B}
-	cygconf --enable-shared LDSHARED="${CC} -shared" DLDFLAGS="-Wl,--export-all-symbols"
+	cygconf \
+		--with-rubylibprefix=/usr/share/ruby/${ruby_version} \
+		--with-rubyarchprefix=/usr/lib/ruby/${ruby_version} \
+		--with-rubyhdrdir=/usr/include/ruby-${ruby_version} \
+		--with-rubyarchhdrdir=/usr/include/ruby-${ruby_version} \
+		--with-sitedir=/usr/local/share/ruby/site_ruby \
+		--with-sitearchdir=/usr/local/lib/ruby/site_ruby/${ruby_version} \
+		--with-sitehdrdir=/usr/local/include/ruby-${ruby_version} \
+		--with-vendordir=/usr/share/ruby/vendor_ruby \
+		--with-vendorarchdir=/usr/lib/ruby/vendor_ruby/${ruby_version} \
+		--with-vendorhdrdir=/usr/include/ruby-${ruby_version}/vendor_ruby \
+		--with-rubygemsdir=/usr/share/rubygems \
+		--with-ruby-version='' \
+		--disable-load-relative \
+		--disable-multiarch \
+		--enable-shared \
+		LDSHARED="${CC} -shared" DLDFLAGS="-Wl,--export-all-symbols"
 	cygmake
 }
 
@@ -42,24 +64,31 @@ src_test() {
 }
 
 src_install() {
-	local rblibdir=/usr/lib/ruby/2.0.0
-	local rbarchdir=${rblibdir}/${ARCH/i6/i3}-cygwin
-	local rbgemdir=/usr/lib/ruby/gems/2.0.0
+	local rblibdir=/usr/share/ruby/${VERSION%.*}.0
+	local rbarchdir=/usr/lib/ruby/${VERSION%.*}.0
+	local rbgemdir=/usr/share/gems
+	local ruby_version=${VERSION%.*}.0
 
 	cd ${B}
 	cygmake install-all DESTDIR=${D}
 	# leave trailing space in case of improper append (e.g. globalhotkeys)
-	sed -i -e "s/ -fdebug-prefix-map\([^ '\"]*\)/ /g" ${D}/${rbarchdir}/rbconfig.rb
+	sed -i -e "s/ -fdebug-prefix-map\([^ '\"]*\)/ /g" \
+		-e 's|/$(ruby_version)||g' \
+		${D}/${rbarchdir}/rbconfig.rb
 
 	# updated versions provided by gems
-	rm -f ${D}/usr/bin/{rake,rdoc,ri}
-	rm -fr ${D}/${rbarchdir}/{json/}*
-	rm -fr ${D}/${rblibdir}/{json,rake,rdoc}*
-	rm -fr ${D}/${rbgemdir}/gems/{json,rake,rdoc}*
-	rm -f ${D}/${rbgemdir}/specifications/{json,rake,rdoc}*
+	# bigdecimal, io-console, psych must remain in stdlib
+	rm -f ${D}/usr/bin/{gem,rake,rdoc,ri}
 	rm -f ${D}/usr/share/man/man1/{rake,ri}.*
+	rm -fr ${D}/${rbarchdir}/json/
+	rm -fr ${D}/${rblibdir}/{json,minitest,rake,rdoc}*
+	rm -fr ${D}/usr/share/rubygems/
+	# test/unit bundled in ruby-1.9.1+ is just a compatibility layer
+	# on top of minitest and not compatible with the "real" test-unit
+	rm -fr ${D}/${rbgemdir}/gems/{json,minitest,rake,rdoc,test-unit}-*
+	rm -f ${D}/${rbgemdir}/specifications/default/{bigdecimal,io-console,json,minitest,psych,rake,rdoc,test-unit}-*
 
-	# use system ca-certificates
-	rm -f ${D}${rblibdir}/rubygems/ssl_certs/ca-bundle.pem
-	dosym /usr/ssl/certs/ca-bundle.crt ${rblibdir}/rubygems/ssl_certs/ca-bundle.pem
+	rm -f ${D}/usr/lib/libruby*-static.a
+	dosym libruby${ruby_version//\./}.dll.a /usr/lib/libruby.dll.a
+	dosym ruby-${VERSION%.*}.pc /usr/lib/pkgconfig/ruby.pc
 }
