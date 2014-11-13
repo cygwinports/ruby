@@ -1,5 +1,5 @@
 NAME="ruby"
-VERSION=2.0.0-p594
+VERSION=2.0.0-p598
 RELEASE=1
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
