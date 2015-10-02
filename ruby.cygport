@@ -1,5 +1,5 @@
 NAME="ruby"
-VERSION=2.2.2
+VERSION=2.2.3
 RELEASE=1
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
@@ -15,7 +15,6 @@ PATCH_URI="
 	fedora/ruby-2.1.0-always-use-i386.patch
 	fedora/ruby-2.1.0-custom-rubygems-location.patch
 	fedora/ruby-1.9.3-mkmf-verbose.patch
-	fedora/ruby-2.2.1-use-statfs.patch
 	1.8.7-cygwin-tcltk.patch
 	2.0.0-cygwin-configure.patch
 	2.0.0-cygwin-rubygems.patch
@@ -24,7 +23,7 @@ PATCH_URI="
 "
 
 PKG_NAMES="${NAME} ${NAME}-doc ${NAME}-tcltk"
-ruby_CONTENTS="--exclude=capi --exclude=tcltk* --exclude=*tk* --exclude=usr/share/ri usr/"
+ruby_CONTENTS="--exclude=capi --exclude=tcltk* --exclude=*tk* --exclude=usr/share/ri usr/ var/lib/rebase/"
 ruby_doc_CONTENTS="usr/share/ri/"
 ruby_tcltk_SUMMARY="Ruby Tcl/Tk interface"
 ruby_tcltk_CONTENTS="usr/lib/ruby/${VERSION%.*}.0/*tk* usr/share/ruby/${VERSION%.*}.0/*tk*"
@@ -92,4 +91,10 @@ src_install() {
 	rm -f ${D}/usr/lib/libruby*-static.a
 	dosym libruby${ruby_version//\./}.dll.a /usr/lib/libruby.dll.a
 	dosym ruby-${VERSION%.*}.pc /usr/lib/pkgconfig/ruby.pc
+
+	dodir /var/lib/rebase/dynpath.d
+	echo > ${D}/var/lib/rebase/dynpath.d/${NAME} <<_EOF
+/usr/lib/gems/ruby/${ruby_version}
+/usr/local/lib/ruby/site_ruby/${ruby_version}
+_EOF
 }
