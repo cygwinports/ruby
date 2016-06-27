@@ -1,0 +1,13 @@
+dlopen no longer adds the .dll extension automatically
+
+--- origsrc/ruby-2.2.5/ext/win32/lib/win32/resolv.rb	2013-07-12 22:24:28.000000000 -0500
++++ src/ruby-2.2.5/ext/win32/lib/win32/resolv.rb	2016-06-27 14:18:11.965448600 -0500
+@@ -35,7 +35,7 @@ module Win32
+ 
+ module Kernel32
+   extend Importer
+-  dlload "kernel32"
++  dlload "kernel32.dll"
+ end
+ getv = Kernel32.extern "int GetVersionExA(void *)", :stdcall
+ info = [ 148, 0, 0, 0, 0 ].pack('V5') + "\0" * 128

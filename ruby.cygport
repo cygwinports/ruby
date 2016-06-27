@@ -1,5 +1,5 @@
 NAME="ruby"
-VERSION=2.2.4
+VERSION=2.2.5
 RELEASE=1
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
@@ -15,16 +15,33 @@ PATCH_URI="
 	fedora/ruby-2.1.0-always-use-i386.patch
 	fedora/ruby-2.1.0-custom-rubygems-location.patch
 	fedora/ruby-1.9.3-mkmf-verbose.patch
+	fedora/ruby-2.2.6-Tests-depends-on-Europe-Moscow-removed.patch
+	fedora/ruby-2.2.6-Fix-random-test-failure-introduced-by-r54698.patch
 	1.8.7-cygwin-tcltk.patch
 	2.0.0-cygwin-configure.patch
 	2.0.0-cygwin-rubygems.patch
 	2.0.0-pkgconfig-version.patch
-	2.2.2-cygwin-compile.patch
+	2.2.5-cygwin-dlload.patch
 "
 
-PKG_NAMES="${NAME} ${NAME}-doc ${NAME}-tcltk"
+PKG_NAMES="${NAME} ${NAME}-devel ${NAME}-doc ${NAME}-tcltk"
 ruby_REQUIRES="rubygems"
-ruby_CONTENTS="--exclude=capi --exclude=tcltk* --exclude=*tk* --exclude=usr/share/ri usr/ var/lib/rebase/"
+ruby_CONTENTS="
+	--exclude=capi --exclude=tcltk* --exclude=*tk*
+	usr/bin/*
+	usr/lib/ruby/
+	usr/share/doc/
+	usr/share/gems/
+	usr/share/man/man1/
+	usr/share/ruby/
+	var/lib/rebase/
+"
+ruby_devel_REQUIRES="libcrypt-devel libgmp-devel"
+ruby_devel_CONTENTS="
+	usr/include/ruby-${VERSION%.*}.0/
+	usr/lib/libruby*.dll.a
+	usr/lib/pkgconfig/ruby*.pc
+"
 ruby_doc_CONTENTS="usr/share/ri/"
 ruby_tcltk_SUMMARY="Ruby Tcl/Tk interface"
 ruby_tcltk_CONTENTS="usr/lib/ruby/${VERSION%.*}.0/*tk* usr/share/ruby/${VERSION%.*}.0/*tk*"
