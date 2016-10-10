@@ -1,6 +1,6 @@
 NAME="ruby"
 VERSION=2.2.5
-RELEASE=1
+RELEASE=2
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
 DESCRIPTION="Ruby is the interpreted scripting language for quick and easy
