@@ -1,6 +1,6 @@
 NAME="ruby"
-VERSION=2.2.5
-RELEASE=2
+VERSION=2.2.6
+RELEASE=1
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
 DESCRIPTION="Ruby is the interpreted scripting language for quick and easy
@@ -15,8 +15,6 @@ PATCH_URI="
 	fedora/ruby-2.1.0-always-use-i386.patch
 	fedora/ruby-2.1.0-custom-rubygems-location.patch
 	fedora/ruby-1.9.3-mkmf-verbose.patch
-	fedora/ruby-2.2.6-Tests-depends-on-Europe-Moscow-removed.patch
-	fedora/ruby-2.2.6-Fix-random-test-failure-introduced-by-r54698.patch
 	1.8.7-cygwin-tcltk.patch
 	2.0.0-cygwin-configure.patch
 	2.0.0-cygwin-rubygems.patch
