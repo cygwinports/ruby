@@ -1,5 +1,5 @@
 NAME="ruby"
-VERSION=2.3.3
+VERSION=2.3.6
 RELEASE=1
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
@@ -10,6 +10,7 @@ and extensible."
 HOMEPAGE="http://www.ruby-lang.org/"
 SRC_URI="ftp://ftp.ruby-lang.org/pub/ruby/${VERSION%.*}/ruby-${VERSION}.tar.bz2"
 PATCH_URI="
+	https://bugs.ruby-lang.org/attachments/download/6733/configure-2.3.5.diff
 	fedora/ruby-2.3.0-ruby_version.patch
 	fedora/ruby-2.1.0-Prevent-duplicated-paths-when-empty-version-string-i.patch
 	fedora/ruby-2.1.0-Enable-configuration-of-archlibdir.patch
