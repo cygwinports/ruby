@@ -1,5 +1,5 @@
 NAME="ruby"
-VERSION=2.3.6
+VERSION=2.5.1
 RELEASE=1
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
@@ -10,7 +10,6 @@ and extensible."
 HOMEPAGE="http://www.ruby-lang.org/"
 SRC_URI="ftp://ftp.ruby-lang.org/pub/ruby/${VERSION%.*}/ruby-${VERSION}.tar.bz2"
 PATCH_URI="
-	https://bugs.ruby-lang.org/attachments/download/6733/configure-2.3.5.diff
 	fedora/ruby-2.3.0-ruby_version.patch
 	fedora/ruby-2.1.0-Prevent-duplicated-paths-when-empty-version-string-i.patch
 	fedora/ruby-2.1.0-Enable-configuration-of-archlibdir.patch
@@ -18,12 +17,9 @@ PATCH_URI="
 	fedora/ruby-2.1.0-custom-rubygems-location.patch
 	fedora/ruby-1.9.3-mkmf-verbose.patch
 	fedora/ruby-2.2.3-Generate-preludes-using-miniruby.patch
-	fedora/ruby-2.3.3-Revert-use-frozen-strings-in-serialized-specs.patch
-	1.8.7-cygwin-tcltk.patch
-	2.0.0-cygwin-configure.patch
+	fedora/ruby-2.5.0-Add-Gem.operating_system_defaults.patch
+	fedora/ruby-2.5.1-TestTimeTZ-test-failures-Kiritimati-and-Lisbon.patch
 	2.0.0-cygwin-rubygems.patch
-	2.0.0-pkgconfig-version.patch
-	2.2.5-cygwin-dlload.patch
 "
 
 PKG_NAMES="${NAME} ${NAME}-devel ${NAME}-doc ${NAME}-tcltk"
