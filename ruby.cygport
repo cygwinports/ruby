@@ -1,5 +1,5 @@
 NAME="ruby"
-VERSION=2.3.6
+VERSION=2.5.1
 RELEASE=1
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
@@ -10,7 +10,6 @@ and extensible."
 HOMEPAGE="http://www.ruby-lang.org/"
 SRC_URI="ftp://ftp.ruby-lang.org/pub/ruby/${VERSION%.*}/ruby-${VERSION}.tar.bz2"
 PATCH_URI="
-	https://bugs.ruby-lang.org/attachments/download/6733/configure-2.3.5.diff
 	fedora/ruby-2.3.0-ruby_version.patch
 	fedora/ruby-2.1.0-Prevent-duplicated-paths-when-empty-version-string-i.patch
 	fedora/ruby-2.1.0-Enable-configuration-of-archlibdir.patch
@@ -18,28 +17,28 @@ PATCH_URI="
 	fedora/ruby-2.1.0-custom-rubygems-location.patch
 	fedora/ruby-1.9.3-mkmf-verbose.patch
 	fedora/ruby-2.2.3-Generate-preludes-using-miniruby.patch
-	fedora/ruby-2.3.3-Revert-use-frozen-strings-in-serialized-specs.patch
-	1.8.7-cygwin-tcltk.patch
+	fedora/ruby-2.5.1-TestTimeTZ-test-failures-Kiritimati-and-Lisbon.patch
 	2.0.0-cygwin-configure.patch
 	2.0.0-cygwin-rubygems.patch
 	2.0.0-pkgconfig-version.patch
-	2.2.5-cygwin-dlload.patch
 "
 
 PKG_NAMES="${NAME} ${NAME}-devel ${NAME}-doc ${NAME}-tcltk"
 ruby_REQUIRES="rubygems ruby-did_you_mean"
+ruby_OBSOLETES="ruby-bigdecimal ruby-io-console ruby-json ruby-openssl ruby-psych"
 ruby_CONTENTS="
 	--exclude=capi
 	usr/bin/*
 	usr/lib/ruby/
 	usr/share/doc/
+	usr/share/gems/specifications/default/
 	usr/share/man/man1/
 	usr/share/ruby/
 	var/lib/rebase/
 "
 ruby_devel_REQUIRES="libcrypt-devel libgmp-devel"
 ruby_devel_CONTENTS="
-	usr/include/ruby-${VERSION%.*}.0/
+	usr/include/ruby-${VERSION%.*}/
 	usr/lib/libruby*.dll.a
 	usr/lib/pkgconfig/ruby*.pc
 "
@@ -49,9 +48,12 @@ ruby_tcltk_REQUIRES="ruby-tk"
 
 DIFF_EXCLUDES=".document revision.h"
 
+if defined ARCH_i686; then
+CFLAGS+=" -fno-stack-protector -Wp,-U_FORTIFY_SOURCE"
+fi
+
 src_compile() {
-	# drop the trailing .0 for 2.1?
-	local ruby_version=${VERSION%.*}.0
+	local ruby_version=${VERSION%.*}
 
 	cd ${S}
 	cygautoreconf
@@ -82,10 +84,10 @@ src_test() {
 }
 
 src_install() {
-	local rblibdir=/usr/share/ruby/${VERSION%.*}.0
-	local rbarchdir=/usr/lib/ruby/${VERSION%.*}.0
+	local ruby_version=${VERSION%.*}
+	local rblibdir=/usr/share/ruby/${ruby_version}
+	local rbarchdir=/usr/lib/ruby/${ruby_version}
 	local rbgemdir=/usr/share/gems
-	local ruby_version=${VERSION%.*}.0
 
 	cd ${B}
 	cygmake install-all DESTDIR=${D}
@@ -99,37 +101,15 @@ src_install() {
 	# rubygems
 	rm -f  ${D}/usr/bin/gem
 	rm -fr ${D}/usr/share/rubygems/
-	# bigdecimal
-	rm -f  ${D}${rbarchdir}/bigdecimal.so
-	rm -fr ${D}${rblibdir}/bigdecimal/
-	rm -f  ${D}${rbgemdir}/specifications/default/bigdecimal-*.gemspec
 	# did_you_mean (since 2.3)
 	rm -fr ${D}${rbgemdir}/gems/did_you_mean-*
 	rm -f  ${D}${rbgemdir}/specifications/did_you_mean-*.gemspec
-	# io-console
-	rm -f  ${D}${rbarchdir}/io/console.so
-	rm -fr ${D}${rblibdir}/io/console/
-	rm -f  ${D}${rbgemdir}/specifications/default/io-console-*.gemspec
-	# json
-	rm -fr ${D}${rbarchdir}/json/
-	if ! defined BOOTSTRAP
-	then
-		rm -fr ${D}${rblibdir}/json*
-	fi
-	rm -f  ${D}${rbgemdir}/specifications/default/json-*.gemspec
 	# minitest
 	rm -fr ${D}${rbgemdir}/gems/minitest-*
 	rm -f  ${D}${rbgemdir}/specifications/minitest-*.gemspec
 	# net-telnet (since 2.3)
 	rm -fr ${D}${rbgemdir}/gems/net-telnet-*
 	rm -f  ${D}${rbgemdir}/specifications/net-telnet-*.gemspec
-	# psych
-	if ! defined BOOTSTRAP
-	then
-		rm -f  ${D}${rbarchdir}/psych.so
-		rm -fr ${D}${rblibdir}/psych*
-	fi
-	rm -f  ${D}${rbgemdir}/specifications/default/psych-*.gemspec
 	# power_assert (since 2.3)
 	rm -fr ${D}${rbgemdir}/gems/power_assert-*
 	rm -f  ${D}${rbgemdir}/specifications/power_assert-*.gemspec
@@ -147,18 +127,12 @@ src_install() {
 	# test-unit
 	rm -fr ${D}${rbgemdir}/gems/test-unit-*
 	rm -f  ${D}${rbgemdir}/specifications/test-unit-*
-	# tk (since 2.4)
-	rm -f  ${D}${rbarchdir}/tcltklib.so
-	rm -f  ${D}${rbarchdir}/tkutil.so
-	rm -fr ${D}${rblibdir}/{tk*,*tk}.rb
-	rm -fr ${D}${rblibdir}/{tk,tkextlib}/
-#	rm -f  ${D}${rbgemdir}/specifications/tk-*.gemspec
 	# xmlrpc (since 2.4)
-	rm -fr ${D}${rblibdir}/xmlrpc*
-#	rm -f  ${D}${rbgemdir}/specifications/xmlrpc-*.gemspec
+	rm -fr ${D}${rbgemdir}/gems/xmlrpc-*
+	rm -f  ${D}${rbgemdir}/specifications/xmlrpc-*.gemspec
 
 	rm -f ${D}/usr/lib/libruby*-static.a
-	dosym libruby${ruby_version//\./}.dll.a /usr/lib/libruby.dll.a
+	dosym libruby${ruby_version//\./}0.dll.a /usr/lib/libruby.dll.a
 	dosym ruby-${VERSION%.*}.pc /usr/lib/pkgconfig/ruby.pc
 
 	dodir /var/lib/rebase/dynpath.d

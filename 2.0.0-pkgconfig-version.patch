@@ -8,6 +8,6 @@ This should be part of the Fedora empty-ruby_version patch
  Description: Object Oriented Script Language
 -Version: ${ruby_version}
 +Version: @RUBY_PROGRAM_VERSION@
- URL: http://www.ruby-lang.org
+ URL: https://www.ruby-lang.org
  Cflags: -I${rubyhdrdir}/${arch} -I${rubyhdrdir}
  Libs: ${DLDFLAGS} ${LIBRUBYARG_SHARED} ${LIBS}
