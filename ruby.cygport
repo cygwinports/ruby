@@ -21,6 +21,7 @@ PATCH_URI="
 	2.0.0-cygwin-configure.patch
 	2.0.0-cygwin-rubygems.patch
 	2.0.0-pkgconfig-version.patch
+	2.5.1-win32-resolv.patch
 "
 
 PKG_NAMES="${NAME} ${NAME}-devel ${NAME}-doc ${NAME}-tcltk"
