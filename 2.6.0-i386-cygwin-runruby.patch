@@ -1,0 +1,11 @@
+--- origsrc/ruby-2.6.0/tool/runruby.rb	2018-07-10 02:49:21.000000000 +0900
++++ src/ruby-2.6.0/tool/runruby.rb	2019-01-13 08:58:08.619601600 +0900
+@@ -93,7 +93,7 @@ end
+ libs << File.expand_path("lib", srcdir)
+ config["bindir"] = abs_archdir
+ 
+-env = {
++env = /i386-cygwin/ =~ RUBY_PLATFORM ? {} : {
+   # Test with the smallest possible machine stack sizes.
+   # These values are clamped to machine-dependent minimum values in vm_core.h
+   'RUBY_THREAD_MACHINE_STACK_SIZE' => '1',

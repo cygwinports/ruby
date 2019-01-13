@@ -1,5 +1,5 @@
 NAME="ruby"
-VERSION=2.5.1
+VERSION=2.6.0
 RELEASE=1
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
@@ -8,32 +8,30 @@ object-oriented programming.  It has many features to process text files and
 to do system management tasks (as in Perl).  It is simple, straight-forward,
 and extensible."
 HOMEPAGE="http://www.ruby-lang.org/"
-SRC_URI="ftp://ftp.ruby-lang.org/pub/ruby/${VERSION%.*}/ruby-${VERSION}.tar.bz2"
+SRC_URI="https://cache.ruby-lang.org/pub/ruby/${VERSION%.*}/ruby-${VERSION}.tar.bz2"
 PATCH_URI="
-	fedora/ruby-2.3.0-ruby_version.patch
-	fedora/ruby-2.1.0-Prevent-duplicated-paths-when-empty-version-string-i.patch
 	fedora/ruby-2.1.0-Enable-configuration-of-archlibdir.patch
 	fedora/ruby-2.1.0-always-use-i386.patch
 	fedora/ruby-2.1.0-custom-rubygems-location.patch
 	fedora/ruby-1.9.3-mkmf-verbose.patch
 	fedora/ruby-2.2.3-Generate-preludes-using-miniruby.patch
-	fedora/ruby-2.5.1-TestTimeTZ-test-failures-Kiritimati-and-Lisbon.patch
 	2.0.0-cygwin-configure.patch
 	2.0.0-cygwin-rubygems.patch
 	2.0.0-pkgconfig-version.patch
 	2.5.1-win32-resolv.patch
+	2.6.0-i386-cygwin-runruby.patch
 "
 
-PKG_NAMES="${NAME} ${NAME}-devel ${NAME}-doc ${NAME}-tcltk"
+PKG_NAMES="${NAME} ${NAME}-devel ${NAME}-doc"
 ruby_REQUIRES="rubygems ruby-did_you_mean"
-ruby_OBSOLETES="ruby-bigdecimal ruby-io-console ruby-json ruby-openssl ruby-psych"
+ruby_OBSOLETES="ruby-bigdecimal ruby-io-console ruby-json ruby-openssl ruby-psych ruby-tcltk"
 ruby_CONTENTS="
 	--exclude=capi
 	usr/bin/*
 	usr/lib/ruby/
 	usr/share/doc/
-	usr/share/gems/specifications/default/
-	usr/share/man/man1/
+	usr/share/gems/
+	usr/share/man/
 	usr/share/ruby/
 	var/lib/rebase/
 "
@@ -72,7 +70,6 @@ src_compile() {
 		--with-vendorarchdir=/usr/lib/ruby/vendor_ruby/${ruby_version} \
 		--with-vendorhdrdir=/usr/include/ruby-${ruby_version}/vendor_ruby \
 		--with-rubygemsdir=/usr/share/rubygems \
-		--with-ruby-version='' \
 		--disable-multiarch \
 		--enable-shared \
 		LDSHARED="${CC} -shared" DLDFLAGS="-Wl,--export-all-symbols"
