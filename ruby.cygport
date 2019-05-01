@@ -1,5 +1,5 @@
 NAME="ruby"
-VERSION=2.5.1
+VERSION=2.6.3
 RELEASE=1
 CATEGORY="Interpreters Ruby"
 SUMMARY="Interpreted object-oriented scripting language"
@@ -8,7 +8,7 @@ object-oriented programming.  It has many features to process text files and
 to do system management tasks (as in Perl).  It is simple, straight-forward,
 and extensible."
 HOMEPAGE="http://www.ruby-lang.org/"
-SRC_URI="ftp://ftp.ruby-lang.org/pub/ruby/${VERSION%.*}/ruby-${VERSION}.tar.bz2"
+SRC_URI="https://cache.ruby-lang.org/pub/ruby/${VERSION%.*}/ruby-${VERSION}.tar.bz2"
 PATCH_URI="
 	fedora/ruby-2.3.0-ruby_version.patch
 	fedora/ruby-2.1.0-Prevent-duplicated-paths-when-empty-version-string-i.patch
@@ -17,7 +17,8 @@ PATCH_URI="
 	fedora/ruby-2.1.0-custom-rubygems-location.patch
 	fedora/ruby-1.9.3-mkmf-verbose.patch
 	fedora/ruby-2.2.3-Generate-preludes-using-miniruby.patch
-	fedora/ruby-2.5.1-TestTimeTZ-test-failures-Kiritimati-and-Lisbon.patch
+	fedora/ruby-2.6.0-config-support-include-directive.patch
+	fedora/ruby-2.6.0-use-larger-keys-for-SSL-tests.patch
 	2.0.0-cygwin-configure.patch
 	2.0.0-cygwin-rubygems.patch
 	2.0.0-pkgconfig-version.patch
@@ -25,15 +26,20 @@ PATCH_URI="
 "
 
 PKG_NAMES="${NAME} ${NAME}-devel ${NAME}-doc ${NAME}-tcltk"
-ruby_REQUIRES="rubygems ruby-did_you_mean"
-ruby_OBSOLETES="ruby-bigdecimal ruby-io-console ruby-json ruby-openssl ruby-psych"
+ruby_REQUIRES="rubygems ruby-did_you_mean ca-certificates"
+ruby_OBSOLETES="ruby-bigdecimal ruby-bundler ruby-io-console ruby-json ruby-psych"
 ruby_CONTENTS="
 	--exclude=capi
-	usr/bin/*
+	usr/bin/bundle*
+	usr/bin/cygruby*.dll
+	usr/bin/erb
+	usr/bin/irb
+	usr/bin/ruby.exe
 	usr/lib/ruby/
 	usr/share/doc/
 	usr/share/gems/specifications/default/
-	usr/share/man/man1/
+	usr/share/man/man1/*
+	usr/share/man/man5/*
 	usr/share/ruby/
 	var/lib/rebase/
 "
@@ -43,15 +49,13 @@ ruby_devel_CONTENTS="
 	usr/lib/libruby*.dll.a
 	usr/lib/pkgconfig/ruby*.pc
 "
+ruby_doc_OBSOLETES="ruby-bigdecimal-doc ruby-bundler-doc ruby-io-console-doc ruby-json-doc ruby-psych-doc"
 ruby_doc_CONTENTS="usr/share/ri/"
 ruby_tcltk_SUMMARY="_obsolete"
 ruby_tcltk_REQUIRES="ruby-tk"
+ruby_debuginfo_OBSOLETES="ruby-bigdecimal-debuginfo ruby-io-console-debuginfo ruby-json-debuginfo ruby-psych-debuginfo"
 
 DIFF_EXCLUDES=".document revision.h"
-
-if defined ARCH_i686; then
-CFLAGS+=" -fno-stack-protector -Wp,-U_FORTIFY_SOURCE"
-fi
 
 src_compile() {
 	local ruby_version=${VERSION%.*}
@@ -97,11 +101,16 @@ src_install() {
 		-e 's|/$(ruby_version)||g' \
 		${D}${rbarchdir}/rbconfig.rb
 
+	# the libraries are in default locations so no need for gem wrappers
+	mv -f ${D}${rbgemdir}/gems/*/exe/* ${D}/usr/bin/
+
 	# Unbundle; updated versions provided by gems
 	rm -f ${D}${rbgemdir}/cache/*
 	# rubygems
 	rm -f  ${D}/usr/bin/gem
 	rm -fr ${D}/usr/share/rubygems/
+	# bundler: certs
+	rm -fr ${D}${rblibdir}/bundler/ssl_certs/
 	# did_you_mean (since 2.3)
 	rm -fr ${D}${rbgemdir}/gems/did_you_mean-*
 	rm -f  ${D}${rbgemdir}/specifications/did_you_mean-*.gemspec
